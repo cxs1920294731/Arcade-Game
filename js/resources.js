@@ -80,7 +80,6 @@
     function onReady(func) {
         readyCallbacks.push(func);
     }
-
     /* 这个对象通过创造一个公共的资源对象来定义公有的开发者可以访问的函数。*/
     window.Resources = {
         load: load,

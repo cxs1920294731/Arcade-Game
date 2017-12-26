@@ -1,3 +1,10 @@
 body {
     text-align: center;
 }
+.contain{
+    position: relative;
+    width: 60%;
+    height: 0;
+    padding-bottom: 60%;
+    background-color: red;
+}

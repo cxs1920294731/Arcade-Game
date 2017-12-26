@@ -9,7 +9,6 @@
  * 这个引擎是可以通过 Engine 变量公开访问的，而且它也让 canvas context (ctx) 对象也可以
  * 公开访问，以此使编写app.js的时候更加容易
  */
-
 var Engine = (function(global) {
     /* 实现定义我们会在这个作用于用到的变量
      * 创建 canvas 元素，拿到对应的 2D 上下文
@@ -20,7 +19,6 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -33,7 +31,6 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
         /* 调用我们的 update / render 函数， 传递事件间隙给 update 函数因为这样
          * 可以使动画更加顺畅。
          */
@@ -54,7 +51,7 @@ var Engine = (function(global) {
      */
     function init() {
         reset();
-        lastTime = Date.now();
+        lastTime = Date.now();//得到时间戳
         main();
     }
 
@@ -143,7 +140,6 @@ var Engine = (function(global) {
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
-
     /* 把 canvas 上下文对象绑定在 global 全局变量上（在浏览器运行的时候就是 window
      * 对象。从而开发者就可以在他们的app.js文件里面更容易的使用它。
      */
