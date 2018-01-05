@@ -9,11 +9,11 @@
  * 这个引擎是可以通过 Engine 变量公开访问的，而且它也让 canvas context (ctx) 对象也可以
  * 公开访问，以此使编写app.js的时候更加容易
  */
+/* 实现定义我们会在这个作用于用到的变量
+ * 创建 canvas 元素，拿到对应的 2D 上下文
+ * 设置 canvas 元素的高/宽 然后添加到dom中
+ */
 var Engine = (function(global) {
-    /* 实现定义我们会在这个作用于用到的变量
-     * 创建 canvas 元素，拿到对应的 2D 上下文
-     * 设置 canvas 元素的高/宽 然后添加到dom中
-     */
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
@@ -22,30 +22,14 @@ var Engine = (function(global) {
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
-
-    /* 这个函数是整个游戏的主入口，负责适当的调用 update / render 函数 */
     function main() {
-        /* 如果你想要更平滑的动画过度就需要获取时间间隙。因为每个人的电脑处理指令的
-         * 速度是不一样的，我们需要一个对每个人都一样的常数（而不管他们的电脑有多快）
-         * 就问你屌不屌！
-         */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-        /* 调用我们的 update / render 函数， 传递事件间隙给 update 函数因为这样
-         * 可以使动画更加顺畅。
-         */
         update(dt);
         render();
-
-        /* 设置我们的 lastTime 变量，它会被用来决定 main 函数下次被调用的事件。 */
-        lastTime = now;
-
-        /* 在浏览准备好调用重绘下一个帧的时候，用浏览器的 requestAnimationFrame 函数
-         * 来调用这个函数
-         */
-        win.requestAnimationFrame(main);
+        lastTime = now;     /* 设置我们的 lastTime 变量，它会被用来决定 main 函数下次被调用的事件。 */
+        win.requestAnimationFrame(main);   /* 在浏览准备好调用重绘下一个帧的时候，用浏览器的 requestAnimationFrame 函数来调用这个函数*/
     }
-
     /* 这个函数调用一些初始化工作，特别是设置游戏必须的 lastTime 变量，这些工作只用
      * 做一次就够了
      */
@@ -54,7 +38,6 @@ var Engine = (function(global) {
         lastTime = Date.now();//得到时间戳
         main();
     }
-
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
      * 数据的函数，取决于你怎样实现碰撞检测（意思是如何检测两个角色占据了同一个位置，
      * 比如你的角色死的时候），你可能需要在这里调用一个额外的函数。现在我们已经把这里
@@ -62,9 +45,33 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
-
+    //检测是否碰撞
+    function checkCollisions(){
+        let posPlayer=checkPos(player.x,player.y);
+        allEnemies.forEach(function(enemy){
+            let posEn=checkPos(enemy.x,enemy.y);
+            if(posPlayer[0]===posEn[0]&&posPlayer[1]===posEn[1]){
+                player=null;
+                player=new Player();
+            }
+        });
+    }
+    //检测怪物那一格子中
+    /*已知信息
+    *1.格子的大小为101 X 83
+    *2.共有5 X 6个格子
+    *3.起始位置为（0，66）
+    * 坐标是为右上角为0
+    * */
+    function checkPos(x,y){
+        let res=[];
+        res[0]=Math.round(x/101);
+        res[1]=Math.round((y-66)/83);
+        //console.log(res);
+        return res;
+    }
     /* 这个函数会遍历在 app.js 定义的存放所有敌人实例的数组，并且调用他们的 update()
      * 函数，然后，它会调用玩家对象的 update 方法，最后这个函数被 update 函数调用。
      * 这些更新函数应该只聚焦于更新和对象相关的数据/属性。把重绘的工作交给 render 函数。
@@ -105,7 +112,6 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
         renderEntities();
     }
 
@@ -117,7 +123,6 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
     }
 
