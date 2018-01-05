@@ -82,7 +82,7 @@ function getPosX(){
     return x;
 }
 function getSpeed(){
-    let speed=Math.floor(Math.random()*50)+40;
+    let speed=Math.floor(Math.random()*40)+90;
     return speed;
 }
 var enmies1=new Enemy();

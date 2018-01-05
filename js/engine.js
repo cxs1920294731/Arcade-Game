@@ -27,6 +27,7 @@ var Engine = (function(global) {
             dt = (now - lastTime) / 1000.0;
         update(dt);
         render();
+        setTimeout(function(){ifSuccess()},1000)
         lastTime = now;     /* 设置我们的 lastTime 变量，它会被用来决定 main 函数下次被调用的事件。 */
         win.requestAnimationFrame(main);   /* 在浏览准备好调用重绘下一个帧的时候，用浏览器的 requestAnimationFrame 函数来调用这个函数*/
     }
@@ -46,6 +47,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+
     }
     //检测是否碰撞
     function checkCollisions(){
@@ -57,6 +59,16 @@ var Engine = (function(global) {
                 player=new Player();
             }
         });
+    }
+    //检测是否胜利
+    function ifSuccess(){
+        let y=player.y;
+        if(y==-11){
+            console.log("已经胜利");
+            alert("已经取得胜利");
+            player=null;
+            player=new Player();
+        }
     }
     //检测怪物那一格子中
     /*已知信息
